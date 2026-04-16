@@ -35,6 +35,7 @@ def auth_headers():
     token = get_auth_token()
     return {"Authorization": f"Bearer {token}"}
 
+# Test Create Driver
 def test_create_driver(auth_headers):
     response = client.post("/drivers/", json={
         "name": "John Doe",
@@ -48,6 +49,31 @@ def test_create_driver(auth_headers):
     assert data["phone_number"] == "+1234567890"
     assert data["is_active"] == 1
 
+# Test Create Driver Without Auth
+def test_create_driver_without_auth():
+    response = client.post("/drivers/", json={
+        "name": "John Doe",
+        "license_number": "LIC123456",
+        "phone_number": "+1234567890"
+    })
+    assert response.status_code == 401
+
+# Test Duplicate Driver License
+def test_duplicate_driver_license(auth_headers):
+    client.post("/drivers/", json={
+        "name": "Jane Doe",
+        "license_number": "DUPLICATE123",
+        "phone_number": "+1111111111"
+    }, headers=auth_headers)
+    
+    response = client.post("/drivers/", json={
+        "name": "Jane Smith",
+        "license_number": "DUPLICATE123",
+        "phone_number": "+2222222222"
+    }, headers=auth_headers)
+    assert response.status_code == 400
+
+# Test Get All Drivers
 def test_get_drivers(auth_headers):
     client.post("/drivers/", json={"name": "Driver1", "license_number": "L1", "phone_number": "P1"}, headers=auth_headers)
     client.post("/drivers/", json={"name": "Driver2", "license_number": "L2", "phone_number": "P2"}, headers=auth_headers)
@@ -56,6 +82,7 @@ def test_get_drivers(auth_headers):
     assert response.status_code == 200
     assert len(response.json()) == 2
 
+# Test Get Single Driver
 def test_get_single_driver(auth_headers):
     create_response = client.post("/drivers/", json={
         "name": "Single Driver",
@@ -68,6 +95,7 @@ def test_get_single_driver(auth_headers):
     assert response.status_code == 200
     assert response.json()["name"] == "Single Driver"
 
+# Test Update Driver
 def test_update_driver(auth_headers):
     create_response = client.post("/drivers/", json={
         "name": "Old Name",
@@ -84,6 +112,7 @@ def test_update_driver(auth_headers):
     assert response.json()["name"] == "New Name"
     assert response.json()["phone_number"] == "+2222222222"
 
+# Test Delete Driver
 def test_delete_driver(auth_headers):
     create_response = client.post("/drivers/", json={
         "name": "Delete Me",
@@ -97,3 +126,30 @@ def test_delete_driver(auth_headers):
     
     get_response = client.get(f"/drivers/{driver_id}", headers=auth_headers)
     assert get_response.status_code == 404
+
+# Test Pagination
+def test_driver_pagination(auth_headers):
+    for i in range(15):
+        client.post("/drivers/", json={
+            "name": f"Driver{i}",
+            "license_number": f"LIC{i}",
+            "phone_number": f"PHONE{i}"
+        }, headers=auth_headers)
+    
+    response = client.get("/drivers/?skip=0&limit=10", headers=auth_headers)
+    assert response.status_code == 200
+    assert len(response.json()) == 10
+    
+    response = client.get("/drivers/?skip=10&limit=10", headers=auth_headers)
+    assert response.status_code == 200
+    assert len(response.json()) == 5
+
+# Test Invalid Phone Number Format
+def test_invalid_phone_format(auth_headers):
+    response = client.post("/drivers/", json={
+        "name": "Invalid Phone",
+        "license_number": "INVALID123",
+        "phone_number": "123"  # Too short
+    }, headers=auth_headers)
+    # Should still work as phone validation is minimal
+    assert response.status_code == 200
