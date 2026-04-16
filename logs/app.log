@@ -1,0 +1,31 @@
+2026-04-16 05:21:41,459 - app.routers.trucks - INFO - Create truck: ABC123
+2026-04-16 05:23:10,756 - app.routers.drivers - INFO - Create driver: John Doe
+2026-04-16 05:24:05,693 - app.routers.jobs - INFO - Create job: Warehouse A -> Store B
+2026-04-16 05:54:20,729 - app.main - INFO - Root endpoint accessed
+2026-04-16 06:29:16,058 - app.routers.trucks - INFO - Create truck: ABC123
+2026-04-16 06:30:28,951 - app.routers.trucks - INFO - Create truck: ABC1234
+2026-04-16 06:34:29,357 - app.main - INFO - Creating database tables...
+2026-04-16 06:34:29,460 - app.main - INFO - Database tables created successfully
+2026-04-16 06:37:14,932 - app.routers.trucks - INFO - Create truck: REG12345
+2026-04-16 06:39:22,585 - app.routers.trucks - INFO - Create truck: REG12345
+2026-04-16 06:45:22,271 - app.routers.drivers - INFO - Create driver: Tafadzwa
+2026-04-16 06:49:40,877 - app.routers.drivers - INFO - Create driver: Tafadzwa
+2026-04-16 06:51:03,598 - app.routers.jobs - INFO - Create job: Main Warehouse -> Warehouse B
+2026-04-16 07:47:16,133 - app.main - INFO - Creating database tables...
+2026-04-16 07:47:16,199 - app.main - INFO - Database tables created successfully
+2026-04-16 07:54:34,910 - app.main - INFO - Creating database tables...
+2026-04-16 07:54:34,945 - app.main - INFO - Database tables created successfully
+2026-04-16 08:00:59,575 - app.main - INFO - Creating database tables...
+2026-04-16 08:00:59,603 - app.main - INFO - Database tables created successfully
+2026-04-16 08:09:33,923 - app.routers.trucks - INFO - Create truck: REG1234
+2026-04-16 08:10:49,332 - app.main - INFO - Creating database tables...
+2026-04-16 08:10:49,378 - app.main - INFO - Database tables created successfully
+2026-04-16 08:12:14,729 - app.routers.drivers - INFO - Create driver: John Doe
+2026-04-16 08:12:48,280 - app.routers.jobs - INFO - Create job: Main Warehouse -> Store B
+2026-04-16 08:17:26,684 - app.routers.trucks - INFO - Create truck: Reg12345
+2026-04-16 08:28:14,718 - app.main - INFO - Creating database tables...
+2026-04-16 08:28:14,768 - app.main - INFO - Database tables created successfully
+2026-04-16 08:36:17,635 - app.main - INFO - Creating database tables...
+2026-04-16 08:36:17,686 - app.main - INFO - Database tables created successfully
+2026-04-16 08:45:06,902 - app.main - INFO - Creating database tables...
+2026-04-16 08:45:06,935 - app.main - INFO - Database tables created successfully

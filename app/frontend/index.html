@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haulage Management System</title>
+    
+    <!-- CSS Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <style>
+        /* Override Tailwind defaults for whitespace design */
+        body {
+            background: #f8fafc;
+        }
+        
+        .btn-primary, .btn-secondary, .btn-danger {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div id="loginContainer" class="min-h-screen flex items-center justify-center p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="login-container">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-50 rounded-2xl mb-4">
+                    <i class="ri-truck-line text-2xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-semibold text-gray-900 mb-2">Welcome back</h2>
+                <p class="text-sm text-gray-500">Sign in to manage your fleet</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="event.preventDefault(); login();">
+                <div class="mb-4">
+                    <label class="text-sm font-medium text-gray-700 mb-1 block">Username</label>
+                    <div class="relative">
+                        <i class="ri-user-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="text" id="username" value="admin" 
+                               class="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="text-sm font-medium text-gray-700 mb-1 block">Password</label>
+                    <div class="relative">
+                        <i class="ri-lock-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="password" id="password" value="admin" 
+                               class="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full justify-center py-2.5">
+                    Sign In
+                </button>
+            </form>
+            <div id="loginError" class="mt-4 text-red-600 text-center text-sm"></div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardContainer" class="hidden">
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div id="pageHeader"></div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboardSection">
+                <div id="statsCards"></div>
+                <div id="chartsSection"></div>
+                <div id="recentActivity"></div>
+            </div>
+
+            <!-- Trucks Section -->
+            <div id="trucksSection" class="hidden">
+                <div id="truckForm"></div>
+                <div id="trucksTable"></div>
+            </div>
+
+            <!-- Drivers Section -->
+            <div id="driversSection" class="hidden">
+                <div id="driverForm"></div>
+                <div id="driversTable"></div>
+            </div>
+
+            <!-- Jobs Section -->
+            <div id="jobsSection" class="hidden">
+                <div id="jobForm"></div>
+                <div id="jobsTable"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/components.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/trucks.js"></script>
+    <script src="/static/js/drivers.js"></script>
+    <script src="/static/js/jobs.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
