@@ -30,10 +30,6 @@ async function editDriver(id) {
                                     <i class="ri-user-line"></i>
                                     <input type="text" id="editDriverName" value="${driver.name}" placeholder="e.g., John Doe">
                                 </div>
-                                <div class="helper-text">
-                                    <i class="ri-information-line"></i>
-                                    <span>Driver's full legal name</span>
-                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="required">License Number</label>
@@ -41,20 +37,12 @@ async function editDriver(id) {
                                     <i class="ri-id-card-line"></i>
                                     <input type="text" id="editLicenseNumber" value="${driver.license_number}" placeholder="e.g., LIC-12345">
                                 </div>
-                                <div class="helper-text">
-                                    <i class="ri-information-line"></i>
-                                    <span>Valid commercial driver's license</span>
-                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="required">Phone Number</label>
                                 <div class="input-icon">
                                     <i class="ri-phone-line"></i>
                                     <input type="tel" id="editPhoneNumber" value="${driver.phone_number}" placeholder="e.g., +1 234 567 8900">
-                                </div>
-                                <div class="helper-text">
-                                    <i class="ri-information-line"></i>
-                                    <span>Emergency contact number</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -65,10 +53,6 @@ async function editDriver(id) {
                                         <option value="1" ${driver.is_active === 1 ? 'selected' : ''}>Available</option>
                                         <option value="0" ${driver.is_active === 0 ? 'selected' : ''}>On Job</option>
                                     </select>
-                                </div>
-                                <div class="helper-text">
-                                    <i class="ri-information-line"></i>
-                                    <span>Current driver availability</span>
                                 </div>
                             </div>
                             <div class="flex gap-3" style="display: flex; gap: 12px; margin-top: 24px;">
@@ -97,9 +81,7 @@ async function editDriver(id) {
                 showNotification('Driver updated successfully!', 'success');
                 closeModal();
                 await loadDrivers();
-                if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
-                    await updateStats();
-                }
+                if (typeof window.refreshDashboard === "function") window.refreshDashboard();
             } catch (error) {
                 showNotification('Error updating driver: ' + error.message, 'error');
             }
@@ -130,9 +112,7 @@ async function createDriver() {
         document.getElementById('driverLicense').value = '';
         document.getElementById('driverPhone').value = '';
         await loadDrivers();
-        if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
-            await updateStats();
-        }
+        if (typeof window.refreshDashboard === "function") window.refreshDashboard();
     } catch (error) {
         showNotification('Error creating driver: ' + error.message, 'error');
     }
@@ -144,9 +124,7 @@ async function deleteDriver(id) {
             await DriverAPI.delete(id);
             showNotification('Driver deleted successfully', 'success');
             await loadDrivers();
-            if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
-                await updateStats();
-            }
+            if (typeof window.refreshDashboard === "function") window.refreshDashboard();
         } catch (error) {
             showNotification('Error deleting driver', 'error');
         }
@@ -156,4 +134,13 @@ async function deleteDriver(id) {
 function closeModal() {
     const modal = document.getElementById('editDriverModal');
     if (modal) modal.remove();
+}
+
+async function refreshDashboardData() {
+    const dashboardSection = document.getElementById('dashboardSection');
+    if (dashboardSection && !dashboardSection.classList.contains('hidden')) {
+        if (typeof updateStats !== 'undefined') await updateStats();
+        if (typeof loadCharts !== 'undefined') await loadCharts();
+        if (typeof loadRecentActivity !== 'undefined') await loadRecentActivity();
+    }
 }

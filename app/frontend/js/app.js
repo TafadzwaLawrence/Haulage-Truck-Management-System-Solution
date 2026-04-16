@@ -200,3 +200,14 @@ window.addEventListener('load', function() {
         // Pre-fetch token silently?
     }
 });
+
+// Make refreshDashboardData available globally
+window.refreshDashboardData = async function() {
+    const dashboardSection = document.getElementById('dashboardSection');
+    if (dashboardSection && !dashboardSection.classList.contains('hidden')) {
+        if (typeof updateStats !== 'undefined') await updateStats();
+        if (typeof loadCharts !== 'undefined') await loadCharts();
+        if (typeof loadRecentActivity !== 'undefined') await loadRecentActivity();
+        console.log('Dashboard refreshed successfully');
+    }
+};

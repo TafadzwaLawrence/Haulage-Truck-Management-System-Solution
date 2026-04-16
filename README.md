@@ -93,7 +93,6 @@ The **Haulage Truck Management System** is an enterprise-grade solution for logi
 3. **Access the application**
    - Frontend UI: http://localhost:8000
    - API Documentation (Swagger): http://localhost:8000/docs
-   - API Documentation (ReDoc): http://localhost:8000/redoc
 
 4. **Default Admin User**
    - Username: `admin`

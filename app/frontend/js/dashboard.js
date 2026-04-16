@@ -22,7 +22,10 @@ async function updateStats() {
             completedJobs: jobs.filter(j => j.status === 'completed').length
         };
         
-        document.getElementById('statsCards').innerHTML = renderStatsCards(stats);
+        const statsCards = document.getElementById('statsCards');
+        if (statsCards) {
+            statsCards.innerHTML = renderStatsCards(stats);
+        }
     } catch (error) {
         console.error('Error updating stats:', error);
     }
@@ -60,78 +63,73 @@ async function loadCharts() {
             </div>
         `;
         
-        document.getElementById('chartsSection').innerHTML = chartsHtml;
+        const chartsSection = document.getElementById('chartsSection');
+        if (chartsSection) {
+            chartsSection.innerHTML = chartsHtml;
+        }
         
         if (fleetChart) fleetChart.destroy();
         if (jobChart) jobChart.destroy();
         
-        const fleetCtx = document.getElementById('fleetChart').getContext('2d');
-        fleetChart = new Chart(fleetCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Available', 'In Transit', 'Under Maintenance'],
-                datasets: [{
-                    data: [truckStatus.available, truckStatus.in_transit, truckStatus.under_maintenance],
-                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { 
-                        position: 'bottom',
-                        labels: { font: { size: 11, family: 'Inter' }, boxWidth: 10, padding: 8 }
-                    },
-                    tooltip: { bodyFont: { size: 12 } }
+        const fleetCtx = document.getElementById('fleetChart');
+        if (fleetCtx) {
+            fleetChart = new Chart(fleetCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Available', 'In Transit', 'Under Maintenance'],
+                    datasets: [{
+                        data: [truckStatus.available, truckStatus.in_transit, truckStatus.under_maintenance],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
                 },
-                layout: {
-                    padding: { top: 5, bottom: 5, left: 5, right: 5 }
-                }
-            }
-        });
-        
-        const jobCtx = document.getElementById('jobChart').getContext('2d');
-        jobChart = new Chart(jobCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Pending', 'In Progress', 'Completed'],
-                datasets: [{
-                    label: 'Jobs',
-                    data: [jobStatus.pending, jobStatus.in_progress, jobStatus.completed],
-                    backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
-                    borderRadius: 6,
-                    barPercentage: 0.65,
-                    categoryPercentage: 0.8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { 
-                        display: false
-                    },
-                    tooltip: { bodyFont: { size: 12 } }
-                },
-                scales: {
-                    y: { 
-                        beginAtZero: true,
-                        grid: { color: '#f1f5f9', drawBorder: false },
-                        ticks: { font: { size: 11, family: 'Inter' }, stepSize: 1 },
-                        title: { display: false }
-                    },
-                    x: { 
-                        grid: { display: false },
-                        ticks: { font: { size: 11, family: 'Inter' } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: { font: { size: 11, family: 'Inter' }, boxWidth: 10, padding: 8 }
+                        }
                     }
-                },
-                layout: {
-                    padding: { top: 5, bottom: 5, left: 5, right: 5 }
                 }
-            }
-        });
+            });
+        }
+        
+        const jobCtx = document.getElementById('jobChart');
+        if (jobCtx) {
+            jobChart = new Chart(jobCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Pending', 'In Progress', 'Completed'],
+                    datasets: [{
+                        label: 'Jobs',
+                        data: [jobStatus.pending, jobStatus.in_progress, jobStatus.completed],
+                        backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
+                        borderRadius: 6,
+                        barPercentage: 0.65
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { size: 11, stepSize: 1 } }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
     } catch (error) {
         console.error('Error loading charts:', error);
     }
@@ -142,8 +140,11 @@ async function loadRecentActivity() {
         const jobs = await JobAPI.getAll();
         const recent = jobs.slice(-5).reverse();
         
+        const recentActivity = document.getElementById('recentActivity');
+        if (!recentActivity) return;
+        
         if (recent.length === 0) {
-            document.getElementById('recentActivity').innerHTML = `
+            recentActivity.innerHTML = `
                 <div class="card p-6">
                     <div class="text-center py-8">
                         <p class="text-gray-500 text-sm">No recent activity</p>
@@ -185,19 +186,13 @@ async function loadRecentActivity() {
                 </div>
             </div>
         `;
-        document.getElementById('recentActivity').innerHTML = activityHtml;
+        recentActivity.innerHTML = activityHtml;
     } catch (error) {
-        document.getElementById('recentActivity').innerHTML = `
-            <div class="card p-6">
-                <div class="text-center py-8">
-                    <p class="text-red-600 text-sm">Error loading activity</p>
-                </div>
-            </div>
-        `;
+        console.error('Error loading recent activity:', error);
     }
 }
 
-// Make functions available globally
+// Expose functions globally
 window.updateStats = updateStats;
 window.loadCharts = loadCharts;
 window.loadRecentActivity = loadRecentActivity;

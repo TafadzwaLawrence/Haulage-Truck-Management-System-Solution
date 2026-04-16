@@ -75,23 +75,48 @@ async function editTruck(id) {
         
         document.getElementById('editTruckForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Validate inputs
+            const regNumber = document.getElementById('editRegNumber').value.trim();
+            const capacity = document.getElementById('editCapacity').value;
+            
+            if (!regNumber) {
+                showNotification('⚠️ Please enter the truck registration number', 'warning');
+                return;
+            }
+            
+            if (!capacity || capacity <= 0) {
+                showNotification('⚠️ Please enter a valid capacity (must be greater than 0)', 'warning');
+                return;
+            }
+            
             const updatedData = {
-                registration_number: document.getElementById('editRegNumber').value,
-                capacity: parseInt(document.getElementById('editCapacity').value),
+                registration_number: regNumber,
+                capacity: parseInt(capacity),
                 status: document.getElementById('editStatus').value
             };
             
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Updating...';
+            submitBtn.disabled = true;
+            
             try {
                 await TruckAPI.update(id, updatedData);
-                showNotification('Truck updated successfully!', 'success');
+                showNotification('✅ Truck updated successfully!', 'success');
                 closeModal();
                 await loadTrucks();
-                if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
-                    await updateStats();
-                    await loadCharts();
+                // Refresh dashboard
+                if (typeof window.refreshDashboardNow === 'function') {
+                    setTimeout(() => window.refreshDashboardNow(), 500);
                 }
             } catch (error) {
-                showNotification('Error updating truck: ' + error.message, 'error');
+                // Error already shown in apiCall
+                console.error('Update failed:', error);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         });
     } catch (error) {
@@ -103,41 +128,93 @@ async function createTruck() {
     const reg = document.getElementById('truckRegNumber').value.trim();
     const cap = document.getElementById('truckCapacity').value;
     
-    if (!reg || !cap) {
-        showNotification('Please fill in all fields', 'error');
+    // Validation
+    if (!reg) {
+        showNotification('⚠️ Please enter the truck registration number', 'warning');
         return;
     }
+    
+    if (!cap || cap <= 0) {
+        showNotification('⚠️ Please enter a valid capacity (must be greater than 0)', 'warning');
+        return;
+    }
+    
+    // Check for duplicate registration number (basic validation)
+    try {
+        const existingTrucks = await TruckAPI.getAll();
+        if (existingTrucks.some(truck => truck.registration_number.toLowerCase() === reg.toLowerCase())) {
+            showNotification('⚠️ A truck with this registration number already exists. Please use a unique number.', 'warning');
+            return;
+        }
+    } catch (error) {
+        // Continue anyway, backend will handle duplicate
+    }
+    
+    // Show loading state on button
+    const createBtn = event.target;
+    const originalText = createBtn.innerHTML;
+    createBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Adding...';
+    createBtn.disabled = true;
     
     try {
         await TruckAPI.create({ 
             registration_number: reg, 
             capacity: parseInt(cap) 
         });
-        showNotification('Truck created successfully!', 'success');
+        
+        showNotification('✅ Truck created successfully! The truck is now available for assignments.', 'success');
+        
+        // Clear form
         document.getElementById('truckRegNumber').value = '';
         document.getElementById('truckCapacity').value = '';
+        
         await loadTrucks();
-        if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
-            await updateStats();
-            await loadCharts();
+        
+        // Refresh dashboard if visible
+        if (typeof window.refreshDashboardNow === 'function') {
+            setTimeout(() => window.refreshDashboardNow(), 500);
         }
+        
     } catch (error) {
-        showNotification('Error creating truck: ' + error.message, 'error');
+        // Error message already shown in apiCall
+        console.error('Creation failed:', error);
+    } finally {
+        createBtn.innerHTML = originalText;
+        createBtn.disabled = false;
     }
 }
 
 async function deleteTruck(id) {
-    if (confirm('Are you sure you want to delete this truck? This action cannot be undone.')) {
+    // Get truck details for confirmation message
+    let truckReg = '';
+    try {
+        const truck = await TruckAPI.getById(id);
+        truckReg = truck.registration_number;
+    } catch (error) {
+        truckReg = `#${id}`;
+    }
+    
+    if (confirm(`⚠️ Are you sure you want to delete truck ${truckReg}? This action cannot be undone and will remove all associated data.`)) {
+        // Show loading state on the delete button
+        const deleteBtn = event.target;
+        const originalText = deleteBtn.innerHTML;
+        deleteBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i>';
+        deleteBtn.disabled = true;
+        
         try {
             await TruckAPI.delete(id);
-            showNotification('Truck deleted successfully', 'success');
+            showNotification('✅ Truck deleted successfully', 'success');
             await loadTrucks();
-            if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
-                await updateStats();
-                await loadCharts();
+            
+            // Refresh dashboard if visible
+            if (typeof window.refreshDashboardNow === 'function') {
+                setTimeout(() => window.refreshDashboardNow(), 500);
             }
         } catch (error) {
-            showNotification('Error deleting truck', 'error');
+            // Error already shown
+        } finally {
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
         }
     }
 }
@@ -146,3 +223,10 @@ function closeModal() {
     const modal = document.getElementById('editTruckModal');
     if (modal) modal.remove();
 }
+
+// Add keyboard shortcut for closing modal
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});

@@ -8,7 +8,6 @@ function renderSidebar() {
                     </div>
                     <div>
                         <h1 class="text-gray-900 font-bold text-lg">Haulage MS</h1>
-                        <p class="text-gray-500 text-xs">Enterprise Fleet</p>
                     </div>
                 </div>
             </div>
@@ -31,7 +30,7 @@ function renderSidebar() {
                 </a>
                 <a href="#" onclick="showSection('jobs'); loadJobs(); return false;" 
                    class="nav-item">
-                    <i class="ri-delivery-line"></i>
+                    <i class="ri-task-line"></i>
                     <span>Jobs</span>
                 </a>
             </div>
@@ -309,27 +308,21 @@ function renderTrucksTable(trucks) {
             <div class="table-container">
                 <table class="data-table">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Registration Number</th>
-                            <th>Capacity</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
+                        <tr><th>ID</th><th>Registration Number</th><th>Capacity</th><th>Status</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                         ${trucks.map(truck => `
                             <tr>
                                 <td>${truck.id}</td>
-                                <td><span class="font-mono">${truck.registration_number}</span></td>
+                                <td class="font-mono">${truck.registration_number}</td>
                                 <td>${formatNumber(truck.capacity)} kg</td>
                                 <td>${getStatusBadge(truck.status, 'truck')}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button onclick="editTruck(${truck.id})" class="btn-icon" title="Edit">
+                                        <button onclick="editTruck(${truck.id})" class="btn-icon" title="Edit Truck">
                                             <i class="ri-edit-line"></i>
                                         </button>
-                                        <button onclick="deleteTruck(${truck.id})" class="btn-icon danger" title="Delete">
+                                        <button onclick="deleteTruck(${truck.id})" class="btn-icon danger" title="Delete Truck">
                                             <i class="ri-delete-bin-line"></i>
                                         </button>
                                     </div>
@@ -355,29 +348,22 @@ function renderDriversTable(drivers) {
             <div class="table-container">
                 <table class="data-table">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>License Number</th>
-                            <th>Phone Number</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
+                        <tr><th>ID</th><th>Name</th><th>License Number</th><th>Phone Number</th><th>Status</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                         ${drivers.map(driver => `
                             <tr>
                                 <td>${driver.id}</td>
-                                <td><strong>${driver.name}</strong></td>
+                                <td class="font-medium">${driver.name}</td>
                                 <td class="font-mono">${driver.license_number}</td>
                                 <td>${driver.phone_number}</td>
                                 <td>${driver.is_active ? '<span class="badge badge-success">Available</span>' : '<span class="badge badge-warning">On Job</span>'}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button onclick="editDriver(${driver.id})" class="btn-icon" title="Edit">
+                                        <button onclick="editDriver(${driver.id})" class="btn-icon" title="Edit Driver">
                                             <i class="ri-edit-line"></i>
                                         </button>
-                                        <button onclick="deleteDriver(${driver.id})" class="btn-icon danger" title="Delete">
+                                        <button onclick="deleteDriver(${driver.id})" class="btn-icon danger" title="Delete Driver">
                                             <i class="ri-delete-bin-line"></i>
                                         </button>
                                     </div>
@@ -396,21 +382,14 @@ function renderJobsTable(jobs) {
         <div class="card">
             <div class="card-header">
                 <h3>
-                    <i class="ri-delivery-line"></i>
+                    <i class="ri-task-line"></i>
                     Active & Completed Jobs
                 </h3>
             </div>
             <div class="table-container">
                 <table class="data-table">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Pickup Location</th>
-                            <th>Delivery Location</th>
-                            <th>Cargo</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
+                        <tr><th>ID</th><th>Pickup Location</th><th>Delivery Location</th><th>Cargo</th><th>Status</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                         ${jobs.map(job => `
@@ -422,12 +401,15 @@ function renderJobsTable(jobs) {
                                 <td>${getStatusBadge(job.status, 'job')}</td>
                                 <td>
                                     <div class="action-buttons">
+                                        <button onclick="editJob(${job.id})" class="btn-icon" style="color: #3b82f6;" title="Edit Job">
+                                            <i class="ri-edit-line"></i>
+                                        </button>
                                         ${job.status !== 'completed' ? `
-                                            <button onclick="completeJob(${job.id})" class="btn-icon" style="color: #10b981;" title="Complete">
+                                            <button onclick="completeJob(${job.id})" class="btn-icon" style="color: #10b981;" title="Complete Job">
                                                 <i class="ri-check-line"></i>
                                             </button>
                                         ` : ''}
-                                        <button onclick="deleteJob(${job.id})" class="btn-icon danger" title="Delete">
+                                        <button onclick="deleteJob(${job.id})" class="btn-icon danger" title="Delete Job">
                                             <i class="ri-delete-bin-line"></i>
                                         </button>
                                     </div>
