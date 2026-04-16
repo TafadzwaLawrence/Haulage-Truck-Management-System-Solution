@@ -1,44 +1,42 @@
-// UI Components - Whitespace Design
-
 function renderSidebar() {
     return `
         <div class="sidebar">
-            <div class="p-6">
-                <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+            <div class="sidebar-header">
+                <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
                         <i class="ri-truck-line text-blue-600 text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-gray-900 font-semibold text-lg">Haulage MS</h1>
+                        <h1 class="text-gray-900 font-bold text-lg">Haulage MS</h1>
                         <p class="text-gray-500 text-xs">Enterprise Fleet</p>
                     </div>
                 </div>
-                
-                <nav class="space-y-1">
-                    <a href="#" onclick="showSection('dashboard'); return false;" 
-                       class="nav-item active">
-                        <i class="ri-dashboard-line"></i>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="#" onclick="showSection('trucks'); loadTrucks(); return false;" 
-                       class="nav-item">
-                        <i class="ri-truck-line"></i>
-                        <span>Trucks</span>
-                    </a>
-                    <a href="#" onclick="showSection('drivers'); loadDrivers(); return false;" 
-                       class="nav-item">
-                        <i class="ri-user-settings-line"></i>
-                        <span>Drivers</span>
-                    </a>
-                    <a href="#" onclick="showSection('jobs'); loadJobs(); return false;" 
-                       class="nav-item">
-                        <i class="ri-delivery-line"></i>
-                        <span>Jobs</span>
-                    </a>
-                </nav>
             </div>
             
-            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100">
+            <div class="sidebar-nav">
+                <a href="#" onclick="showSection('dashboard'); return false;" 
+                   class="nav-item active">
+                    <i class="ri-dashboard-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="showSection('trucks'); loadTrucks(); return false;" 
+                   class="nav-item">
+                    <i class="ri-truck-line"></i>
+                    <span>Trucks</span>
+                </a>
+                <a href="#" onclick="showSection('drivers'); loadDrivers(); return false;" 
+                   class="nav-item">
+                    <i class="ri-user-settings-line"></i>
+                    <span>Drivers</span>
+                </a>
+                <a href="#" onclick="showSection('jobs'); loadJobs(); return false;" 
+                   class="nav-item">
+                    <i class="ri-delivery-line"></i>
+                    <span>Jobs</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
                 <div class="mb-4 p-3 bg-gray-50 rounded-xl">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -70,49 +68,37 @@ function renderPageHeader(title, subtitle) {
 
 function renderStatsCards(stats) {
     return `
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
+        <div class="stats-grid">
             <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                        <i class="ri-truck-line text-blue-600 text-xl"></i>
-                    </div>
-                    <i class="ri-more-2-fill text-gray-400"></i>
+                <div class="stat-icon blue">
+                    <i class="ri-truck-line"></i>
                 </div>
-                <p class="text-gray-500 text-sm mb-1">Total Trucks</p>
-                <p class="text-gray-900 text-3xl font-semibold">${stats.trucks}</p>
+                <div class="stat-label">Total Trucks</div>
+                <div class="stat-value">${stats.trucks}</div>
             </div>
             
             <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
-                        <i class="ri-user-settings-line text-purple-600 text-xl"></i>
-                    </div>
-                    <i class="ri-more-2-fill text-gray-400"></i>
+                <div class="stat-icon purple">
+                    <i class="ri-user-settings-line"></i>
                 </div>
-                <p class="text-gray-500 text-sm mb-1">Total Drivers</p>
-                <p class="text-gray-900 text-3xl font-semibold">${stats.drivers}</p>
+                <div class="stat-label">Total Drivers</div>
+                <div class="stat-value">${stats.drivers}</div>
             </div>
             
             <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center">
-                        <i class="ri-delivery-line text-yellow-600 text-xl"></i>
-                    </div>
-                    <i class="ri-more-2-fill text-gray-400"></i>
+                <div class="stat-icon yellow">
+                    <i class="ri-delivery-line"></i>
                 </div>
-                <p class="text-gray-500 text-sm mb-1">Active Jobs</p>
-                <p class="text-gray-900 text-3xl font-semibold">${stats.activeJobs}</p>
+                <div class="stat-label">Active Jobs</div>
+                <div class="stat-value">${stats.activeJobs}</div>
             </div>
             
             <div class="stat-card">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-                        <i class="ri-checkbox-circle-line text-green-600 text-xl"></i>
-                    </div>
-                    <i class="ri-more-2-fill text-gray-400"></i>
+                <div class="stat-icon green">
+                    <i class="ri-checkbox-circle-line"></i>
                 </div>
-                <p class="text-gray-500 text-sm mb-1">Completed Jobs</p>
-                <p class="text-gray-900 text-3xl font-semibold">${stats.completedJobs}</p>
+                <div class="stat-label">Completed Jobs</div>
+                <div class="stat-value">${stats.completedJobs}</div>
             </div>
         </div>
     `;
@@ -120,26 +106,42 @@ function renderStatsCards(stats) {
 
 function renderTruckForm() {
     return `
-        <div class="card p-6 mb-6">
-            <h3 class="text-gray-900 font-semibold text-lg mb-4 flex items-center gap-2">
-                <i class="ri-add-line text-blue-600"></i>
-                Add New Truck
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="form-group">
-                    <label>Registration Number</label>
-                    <input type="text" id="truckRegNumber" placeholder="e.g., ABC-1234" 
-                           class="w-full rounded-xl">
-                </div>
-                <div class="form-group">
-                    <label>Capacity (kg)</label>
-                    <input type="number" id="truckCapacity" placeholder="e.g., 10000" 
-                           class="w-full rounded-xl">
-                </div>
-                <div class="flex items-end">
-                    <button onclick="createTruck()" class="btn-primary w-full justify-center">
-                        <i class="ri-add-line"></i> Add Truck
-                    </button>
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="ri-add-line"></i>
+                    Add New Truck
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label class="required">Registration Number</label>
+                        <div class="input-icon">
+                            <i class="ri-truck-line"></i>
+                            <input type="text" id="truckRegNumber" placeholder="e.g., ABC-1234" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Unique vehicle identification number</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Capacity (kg)</label>
+                        <div class="input-icon">
+                            <i class="ri-weight-line"></i>
+                            <input type="number" id="truckCapacity" placeholder="e.g., 10000" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Maximum load capacity in kilograms</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="createTruck()" class="btn-primary" style="width: 100%; margin-top: 24px;">
+                            <i class="ri-add-line"></i> Add Truck
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,31 +150,53 @@ function renderTruckForm() {
 
 function renderDriverForm() {
     return `
-        <div class="card p-6 mb-6">
-            <h3 class="text-gray-900 font-semibold text-lg mb-4 flex items-center gap-2">
-                <i class="ri-add-line text-blue-600"></i>
-                Add New Driver
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="driverName" placeholder="e.g., John Doe" 
-                           class="w-full rounded-xl">
-                </div>
-                <div class="form-group">
-                    <label>License Number</label>
-                    <input type="text" id="driverLicense" placeholder="e.g., LIC-12345" 
-                           class="w-full rounded-xl">
-                </div>
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="text" id="driverPhone" placeholder="e.g., +1234567890" 
-                           class="w-full rounded-xl">
-                </div>
-                <div class="flex items-end">
-                    <button onclick="createDriver()" class="btn-primary w-full justify-center">
-                        <i class="ri-add-line"></i> Add Driver
-                    </button>
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="ri-add-line"></i>
+                    Add New Driver
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="form-grid-4">
+                    <div class="form-group">
+                        <label class="required">Full Name</label>
+                        <div class="input-icon">
+                            <i class="ri-user-line"></i>
+                            <input type="text" id="driverName" placeholder="e.g., John Doe" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Driver's full legal name</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">License Number</label>
+                        <div class="input-icon">
+                            <i class="ri-id-card-line"></i>
+                            <input type="text" id="driverLicense" placeholder="e.g., LIC-12345" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Valid commercial driver's license</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Phone Number</label>
+                        <div class="input-icon">
+                            <i class="ri-phone-line"></i>
+                            <input type="tel" id="driverPhone" placeholder="e.g., +1 234 567 8900" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Emergency contact number</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="createDriver()" class="btn-primary" style="width: 100%; margin-top: 24px;">
+                            <i class="ri-add-line"></i> Add Driver
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,54 +208,234 @@ function renderJobForm(trucks, drivers) {
     const availableDrivers = drivers.filter(d => d.is_active);
     
     return `
-        <div class="card p-6 mb-6">
-            <h3 class="text-gray-900 font-semibold text-lg mb-4 flex items-center gap-2">
-                <i class="ri-add-line text-blue-600"></i>
-                Create New Delivery Job
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div class="form-group">
-                    <label>Pickup Location</label>
-                    <input type="text" id="jobPickup" placeholder="e.g., Warehouse A, City" 
-                           class="w-full rounded-xl">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="ri-add-line"></i>
+                    Create New Delivery Job
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="required">Pickup Location</label>
+                        <div class="input-icon">
+                            <i class="ri-map-pin-line"></i>
+                            <input type="text" id="jobPickup" placeholder="e.g., Warehouse A, City" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Where to pick up the cargo</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Delivery Location</label>
+                        <div class="input-icon">
+                            <i class="ri-map-pin-line"></i>
+                            <input type="text" id="jobDelivery" placeholder="e.g., Store B, City" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Where to deliver the cargo</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Delivery Location</label>
-                    <input type="text" id="jobDelivery" placeholder="e.g., Store B, City" 
-                           class="w-full rounded-xl">
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label class="required">Cargo Description</label>
+                        <div class="input-icon">
+                            <i class="ri-package-line"></i>
+                            <input type="text" id="jobCargo" placeholder="e.g., Electronics, Furniture" autocomplete="off">
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Type of goods being transported</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Assign Truck</label>
+                        <div class="input-icon">
+                            <i class="ri-truck-line"></i>
+                            <select id="jobTruck">
+                                <option value="">Select Truck</option>
+                                ${availableTrucks.map(t => 
+                                    `<option value="${t.id}">${t.registration_number} (${formatNumber(t.capacity)} kg)</option>`
+                                ).join('')}
+                                ${availableTrucks.length === 0 ? '<option disabled>No available trucks</option>' : ''}
+                            </select>
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Only available trucks are shown</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Assign Driver</label>
+                        <div class="input-icon">
+                            <i class="ri-user-settings-line"></i>
+                            <select id="jobDriver">
+                                <option value="">Select Driver</option>
+                                ${availableDrivers.map(d => 
+                                    `<option value="${d.id}">${d.name} (${d.license_number})</option>`
+                                ).join('')}
+                                ${availableDrivers.length === 0 ? '<option disabled>No available drivers</option>' : ''}
+                            </select>
+                        </div>
+                        <div class="helper-text">
+                            <i class="ri-information-line"></i>
+                            <span>Only available drivers are shown</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                    <button onclick="createJob()" class="btn-primary">
+                        <i class="ri-add-line"></i> Create Job
+                    </button>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div class="form-group">
-                    <label>Cargo Description</label>
-                    <input type="text" id="jobCargo" placeholder="e.g., Electronics, Furniture" 
-                           class="w-full rounded-xl">
-                </div>
-                <div class="form-group">
-                    <label>Assign Truck</label>
-                    <select id="jobTruck" class="w-full rounded-xl">
-                        <option value="">Select Truck</option>
-                        ${availableTrucks.map(t => 
-                            `<option value="${t.id}">${t.registration_number} (${formatNumber(t.capacity)} kg) - ${t.status}</option>`
-                        ).join('')}
-                        ${availableTrucks.length === 0 ? '<option disabled>No available trucks</option>' : ''}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Assign Driver</label>
-                    <select id="jobDriver" class="w-full rounded-xl">
-                        <option value="">Select Driver</option>
-                        ${availableDrivers.map(d => 
-                            `<option value="${d.id}">${d.name} (${d.license_number})</option>`
-                        ).join('')}
-                        ${availableDrivers.length === 0 ? '<option disabled>No available drivers</option>' : ''}
-                    </select>
-                </div>
+        </div>
+    `;
+}
+
+function renderTrucksTable(trucks) {
+    return `
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="ri-truck-line"></i>
+                    Truck Fleet
+                </h3>
             </div>
-            <div class="flex justify-end">
-                <button onclick="createJob()" class="btn-primary px-6 py-2.5">
-                    <i class="ri-add-line"></i> Create Job
-                </button>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Registration Number</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${trucks.map(truck => `
+                            <tr>
+                                <td>${truck.id}</td>
+                                <td><span class="font-mono">${truck.registration_number}</span></td>
+                                <td>${formatNumber(truck.capacity)} kg</td>
+                                <td>${getStatusBadge(truck.status, 'truck')}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button onclick="editTruck(${truck.id})" class="btn-icon" title="Edit">
+                                            <i class="ri-edit-line"></i>
+                                        </button>
+                                        <button onclick="deleteTruck(${truck.id})" class="btn-icon danger" title="Delete">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function renderDriversTable(drivers) {
+    return `
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="ri-user-settings-line"></i>
+                    Driver Roster
+                </h3>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>License Number</th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${drivers.map(driver => `
+                            <tr>
+                                <td>${driver.id}</td>
+                                <td><strong>${driver.name}</strong></td>
+                                <td class="font-mono">${driver.license_number}</td>
+                                <td>${driver.phone_number}</td>
+                                <td>${driver.is_active ? '<span class="badge badge-success">Available</span>' : '<span class="badge badge-warning">On Job</span>'}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button onclick="editDriver(${driver.id})" class="btn-icon" title="Edit">
+                                            <i class="ri-edit-line"></i>
+                                        </button>
+                                        <button onclick="deleteDriver(${driver.id})" class="btn-icon danger" title="Delete">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function renderJobsTable(jobs) {
+    return `
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="ri-delivery-line"></i>
+                    Active & Completed Jobs
+                </h3>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Pickup Location</th>
+                            <th>Delivery Location</th>
+                            <th>Cargo</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${jobs.map(job => `
+                            <tr>
+                                <td>${job.id}</td>
+                                <td>${job.pickup_location}</td>
+                                <td>${job.delivery_location}</td>
+                                <td>${job.cargo_description}</td>
+                                <td>${getStatusBadge(job.status, 'job')}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        ${job.status !== 'completed' ? `
+                                            <button onclick="completeJob(${job.id})" class="btn-icon" style="color: #10b981;" title="Complete">
+                                                <i class="ri-check-line"></i>
+                                            </button>
+                                        ` : ''}
+                                        <button onclick="deleteJob(${job.id})" class="btn-icon danger" title="Delete">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             </div>
         </div>
     `;

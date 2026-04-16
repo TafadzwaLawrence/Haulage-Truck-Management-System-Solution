@@ -7,37 +7,9 @@ async function loadJobs() {
         ]);
         
         document.getElementById('jobForm').innerHTML = renderJobForm(trucks, drivers);
-        
-        const tableHtml = `
-            <div class="glass-card rounded-xl p-6">
-                <h3 class="text-white font-semibold mb-4 text-lg">Active & Completed Jobs</h3>
-                <div class="overflow-x-auto">
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>ID</th><th>Pickup Location</th><th>Delivery Location</th><th>Cargo</th><th>Status</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody>
-                            ${jobs.map(job => `
-                                <tr>
-                                    <td>${job.id}</td>
-                                    <td>${job.pickup_location}</td>
-                                    <td>${job.delivery_location}</td>
-                                    <td>${job.cargo_description}</td>
-                                    <td>${getStatusBadge(job.status, 'job')}</td>
-                                    <td>
-                                        ${job.status !== 'completed' ? `<button onclick="completeJob(${job.id})" class="text-green-400 hover:text-green-300 mr-2"><i class="ri-check-line text-xl"></i></button>` : ''}
-                                        <button onclick="deleteJob(${job.id})" class="text-red-400 hover:text-red-300"><i class="ri-delete-bin-line text-xl"></i></button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-        document.getElementById('jobsTable').innerHTML = tableHtml;
+        document.getElementById('jobsTable').innerHTML = renderJobsTable(jobs);
     } catch (error) {
-        document.getElementById('jobsTable').innerHTML = '<div class="glass-card rounded-xl p-6"><p class="text-red-400 text-center">Error loading jobs</p></div>';
+        document.getElementById('jobsTable').innerHTML = '<div class="card p-6"><p class="text-red-600 text-center">Error loading jobs</p></div>';
     }
 }
 
@@ -66,7 +38,7 @@ async function createJob() {
         document.getElementById('jobDelivery').value = '';
         document.getElementById('jobCargo').value = '';
         await loadJobs();
-        if (document.getElementById('dashboardSection').classList.contains('hidden') === false) {
+        if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
             await updateStats();
             await loadCharts();
             await loadRecentActivity();
@@ -82,7 +54,7 @@ async function deleteJob(id) {
             await JobAPI.delete(id);
             showNotification('Job deleted successfully', 'success');
             await loadJobs();
-            if (document.getElementById('dashboardSection').classList.contains('hidden') === false) {
+            if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
                 await updateStats();
                 await loadCharts();
                 await loadRecentActivity();
@@ -99,7 +71,7 @@ async function completeJob(id) {
             await JobAPI.update(id, { status: 'completed' });
             showNotification('Job marked as completed!', 'success');
             await loadJobs();
-            if (document.getElementById('dashboardSection').classList.contains('hidden') === false) {
+            if (!document.getElementById('dashboardSection').classList.contains('hidden')) {
                 await updateStats();
                 await loadCharts();
                 await loadRecentActivity();

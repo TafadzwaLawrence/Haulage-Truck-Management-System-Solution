@@ -1,5 +1,3 @@
-// Dashboard specific logic - Whitespace Design
-
 let fleetChart = null;
 let jobChart = null;
 
@@ -52,12 +50,12 @@ async function loadCharts() {
         const chartsHtml = `
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div class="chart-container">
-                    <h3 class="text-gray-900 font-semibold mb-4 text-base">Fleet Status Distribution</h3>
-                    <canvas id="fleetChart" height="250"></canvas>
+                    <h3>Fleet Status Distribution</h3>
+                    <canvas id="fleetChart" height="200" style="max-height: 200px;"></canvas>
                 </div>
                 <div class="chart-container">
-                    <h3 class="text-gray-900 font-semibold mb-4 text-base">Job Status Overview</h3>
-                    <canvas id="jobChart" height="250"></canvas>
+                    <h3>Job Status Overview</h3>
+                    <canvas id="jobChart" height="200" style="max-height: 200px;"></canvas>
                 </div>
             </div>
         `;
@@ -84,8 +82,12 @@ async function loadCharts() {
                 plugins: {
                     legend: { 
                         position: 'bottom',
-                        labels: { font: { size: 12, family: 'Inter' } }
-                    }
+                        labels: { font: { size: 11, family: 'Inter' }, boxWidth: 10, padding: 8 }
+                    },
+                    tooltip: { bodyFont: { size: 12 } }
+                },
+                layout: {
+                    padding: { top: 5, bottom: 5, left: 5, right: 5 }
                 }
             }
         });
@@ -96,28 +98,37 @@ async function loadCharts() {
             data: {
                 labels: ['Pending', 'In Progress', 'Completed'],
                 datasets: [{
-                    label: 'Number of Jobs',
+                    label: 'Jobs',
                     data: [jobStatus.pending, jobStatus.in_progress, jobStatus.completed],
                     backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
-                    borderRadius: 8
+                    borderRadius: 6,
+                    barPercentage: 0.65,
+                    categoryPercentage: 0.8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
-                    legend: { labels: { font: { size: 12, family: 'Inter' } } }
+                    legend: { 
+                        display: false
+                    },
+                    tooltip: { bodyFont: { size: 12 } }
                 },
                 scales: {
                     y: { 
                         beginAtZero: true,
-                        grid: { color: '#f1f5f9' },
-                        ticks: { font: { size: 12, family: 'Inter' } }
+                        grid: { color: '#f1f5f9', drawBorder: false },
+                        ticks: { font: { size: 11, family: 'Inter' }, stepSize: 1 },
+                        title: { display: false }
                     },
                     x: { 
                         grid: { display: false },
-                        ticks: { font: { size: 12, family: 'Inter' } }
+                        ticks: { font: { size: 11, family: 'Inter' } }
                     }
+                },
+                layout: {
+                    padding: { top: 5, bottom: 5, left: 5, right: 5 }
                 }
             }
         });
@@ -144,22 +155,33 @@ async function loadRecentActivity() {
         
         const activityHtml = `
             <div class="card p-6">
-                <h3 class="text-gray-900 font-semibold mb-4 text-base">Recent Activity</h3>
-                <div class="space-y-3">
-                    ${recent.map(job => `
-                        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                            <div class="flex items-center gap-3 flex-1">
-                                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                                    <i class="ri-delivery-line text-blue-600"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-gray-900 font-medium text-sm">Job #${job.id} - ${job.cargo_description}</p>
-                                    <p class="text-gray-500 text-xs mt-0.5">${job.pickup_location} → ${job.delivery_location}</p>
-                                </div>
-                            </div>
-                            ${getStatusBadge(job.status, 'job')}
-                        </div>
-                    `).join('')}
+                <div class="card-header">
+                    <h3>
+                        <i class="ri-history-line"></i>
+                        Recent Activity
+                    </h3>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Job ID</th>
+                                <th>Cargo</th>
+                                <th>Route</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${recent.map(job => `
+                                <tr>
+                                    <td>#${job.id}</td>
+                                    <td><strong>${job.cargo_description}</strong></td>
+                                    <td>${job.pickup_location} → ${job.delivery_location}</td>
+                                    <td>${getStatusBadge(job.status, 'job')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         `;
@@ -174,3 +196,9 @@ async function loadRecentActivity() {
         `;
     }
 }
+
+// Make functions available globally
+window.updateStats = updateStats;
+window.loadCharts = loadCharts;
+window.loadRecentActivity = loadRecentActivity;
+window.loadDashboard = loadDashboard;

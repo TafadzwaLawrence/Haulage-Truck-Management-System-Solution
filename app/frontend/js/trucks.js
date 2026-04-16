@@ -3,37 +3,7 @@ async function loadTrucks() {
     
     try {
         const trucks = await TruckAPI.getAll();
-        const tableHtml = `
-            <div class="card p-6">
-                <h3 class="text-gray-900 font-semibold mb-4 text-base">Truck Fleet</h3>
-                <div class="overflow-x-auto">
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>ID</th><th>Registration Number</th><th>Capacity</th><th>Status</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody>
-                            ${trucks.map(truck => `
-                                <tr>
-                                    <td>${truck.id}</td>
-                                    <td class="font-mono">${truck.registration_number}</td>
-                                    <td>${formatNumber(truck.capacity)} kg</td>
-                                    <td>${getStatusBadge(truck.status, 'truck')}</td>
-                                    <td>
-                                        <button onclick="editTruck(${truck.id})" class="text-blue-600 hover:text-blue-700 mr-2" title="Edit Truck">
-                                            <i class="ri-edit-line text-lg"></i>
-                                        </button>
-                                        <button onclick="deleteTruck(${truck.id})" class="text-red-600 hover:text-red-700" title="Delete Truck">
-                                            <i class="ri-delete-bin-line text-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-        document.getElementById('trucksTable').innerHTML = tableHtml;
+        document.getElementById('trucksTable').innerHTML = renderTrucksTable(trucks);
     } catch (error) {
         document.getElementById('trucksTable').innerHTML = '<div class="card p-6"><p class="text-red-600 text-center">Error loading trucks</p></div>';
     }
@@ -43,44 +13,60 @@ async function editTruck(id) {
     try {
         const truck = await TruckAPI.getById(id);
         
-        // Create edit modal
         const modalHtml = `
-            <div id="editTruckModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onclick="if(event.target === this) closeModal()">
-                <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold text-gray-900">Edit Truck</h3>
-                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
-                            <i class="ri-close-line text-2xl"></i>
-                        </button>
+            <div id="editTruckModal" class="modal-overlay" onclick="if(event.target === this) closeModal()">
+                <div class="modal-content">
+                    <div class="card-header" style="border-bottom: 1px solid #f1f5f9;">
+                        <h3>
+                            <i class="ri-edit-line"></i>
+                            Edit Truck
+                        </h3>
                     </div>
-                    <form id="editTruckForm">
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">Registration Number</label>
-                            <input type="text" id="editRegNumber" value="${truck.registration_number}" 
-                                   class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">Capacity (kg)</label>
-                            <input type="number" id="editCapacity" value="${truck.capacity}" 
-                                   class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">Status</label>
-                            <select id="editStatus" class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                                <option value="available" ${truck.status === 'available' ? 'selected' : ''}>Available</option>
-                                <option value="in_transit" ${truck.status === 'in_transit' ? 'selected' : ''}>In Transit</option>
-                                <option value="under_maintenance" ${truck.status === 'under_maintenance' ? 'selected' : ''}>Under Maintenance</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-3">
-                            <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50">
-                                Cancel
-                            </button>
-                            <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
-                                Update Truck
-                            </button>
-                        </div>
-                    </form>
+                    <div style="padding: 24px;">
+                        <form id="editTruckForm">
+                            <div class="form-group">
+                                <label class="required">Registration Number</label>
+                                <div class="input-icon">
+                                    <i class="ri-truck-line"></i>
+                                    <input type="text" id="editRegNumber" value="${truck.registration_number}" placeholder="e.g., ABC-1234">
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Unique vehicle identification number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Capacity (kg)</label>
+                                <div class="input-icon">
+                                    <i class="ri-weight-line"></i>
+                                    <input type="number" id="editCapacity" value="${truck.capacity}" placeholder="e.g., 10000">
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Maximum load capacity in kilograms</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Status</label>
+                                <div class="input-icon">
+                                    <i class="ri-eye-line"></i>
+                                    <select id="editStatus">
+                                        <option value="available" ${truck.status === 'available' ? 'selected' : ''}>Available</option>
+                                        <option value="in_transit" ${truck.status === 'in_transit' ? 'selected' : ''}>In Transit</option>
+                                        <option value="under_maintenance" ${truck.status === 'under_maintenance' ? 'selected' : ''}>Under Maintenance</option>
+                                    </select>
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Current operational status</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-3" style="display: flex; gap: 12px; margin-top: 24px;">
+                                <button type="button" onclick="closeModal()" class="btn-secondary" style="flex: 1;">Cancel</button>
+                                <button type="submit" class="btn-primary" style="flex: 1;">Update Truck</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         `;

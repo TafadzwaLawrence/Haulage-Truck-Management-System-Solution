@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haulage Management System</title>
+    <title>Haulage Management System | Enterprise Fleet Management</title>
     
     <!-- CSS Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,52 +12,62 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/style.css">
-    
-    <style>
-        /* Override Tailwind defaults for whitespace design */
-        body {
-            background: #f8fafc;
-        }
-        
-        .btn-primary, .btn-secondary, .btn-danger {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
 </head>
 <body>
     <!-- Login Container -->
-    <div id="loginContainer" class="min-h-screen flex items-center justify-center p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div id="loginContainer" class="min-h-screen flex items-center justify-center p-4" >
         <div class="login-container">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-50 rounded-2xl mb-4">
-                    <i class="ri-truck-line text-2xl text-blue-600"></i>
+            <!-- Logo Section -->
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="ri-truck-line"></i>
                 </div>
-                <h2 class="text-2xl font-semibold text-gray-900 mb-2">Welcome back</h2>
-                <p class="text-sm text-gray-500">Sign in to manage your fleet</p>
+                <h2>Welcome back</h2>
+                <p>Sign in to your account to continue</p>
             </div>
             
+            <!-- Login Form -->
             <form id="loginForm" onsubmit="event.preventDefault(); login();">
-                <div class="mb-4">
-                    <label class="text-sm font-medium text-gray-700 mb-1 block">Username</label>
-                    <div class="relative">
-                        <i class="ri-user-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                        <input type="text" id="username" value="admin" 
-                               class="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                <div class="form-group">
+                    <label class="required">Username</label>
+                    <div class="input-icon">
+                        <i class="ri-user-line"></i>
+                        <input type="text" id="username" value="admin" autocomplete="off" autofocus>
                     </div>
                 </div>
-                <div class="mb-6">
-                    <label class="text-sm font-medium text-gray-700 mb-1 block">Password</label>
-                    <div class="relative">
-                        <i class="ri-lock-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                        <input type="password" id="password" value="admin" 
-                               class="w-full pl-10 pr-4 py-2.5 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                
+                <div class="form-group">
+                    <label class="required">Password</label>
+                    <div class="input-icon">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="password" value="admin">
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="ri-eye-line"></i>
+                        </button>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary w-full justify-center py-2.5">
-                    Sign In
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <span>Sign In</span>
+                    <i class="ri-arrow-right-line"></i>
                 </button>
             </form>
-            <div id="loginError" class="mt-4 text-red-600 text-center text-sm"></div>
+            
+            <div id="loginError" class="login-error"></div>
+            
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>Demo credentials: <strong>admin / admin</strong></p>
+                <p class="mt-2 text-xs opacity-75">© 2024 Haulage Management System. All rights reserved.</p>
+            </div>
         </div>
     </div>
 
@@ -107,5 +117,26 @@
     <script src="/static/js/drivers.js"></script>
     <script src="/static/js/jobs.js"></script>
     <script src="/static/js/app.js"></script>
+    
+    <script>
+        // Password visibility toggle
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.className = 'ri-eye-off-line';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.className = 'ri-eye-line';
+            }
+        }
+        
+        // Remember me functionality
+        if (localStorage.getItem('rememberedUsername')) {
+            document.getElementById('username').value = localStorage.getItem('rememberedUsername');
+            document.getElementById('rememberMe').checked = true;
+        }
+    </script>
 </body>
 </html>

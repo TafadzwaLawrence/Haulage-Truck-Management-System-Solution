@@ -1,29 +1,89 @@
+
+
 async function login() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    
+    // Show loading state
+    const loginBtn = document.querySelector('.login-btn');
+    loginBtn.classList.add('loading');
+    
+    // Clear previous error
+    const errorDiv = document.getElementById('loginError');
+    errorDiv.classList.remove('show');
+    errorDiv.innerHTML = '';
+    
+    // Validate inputs
+    if (!username || !password) {
+        showLoginError('Please enter both username and password');
+        loginBtn.classList.remove('loading');
+        return;
+    }
     
     try {
         const data = await AuthAPI.login(username, password);
         setAuthToken(data.access_token);
-        document.getElementById('loginContainer').classList.add('hidden');
-        document.getElementById('dashboardContainer').classList.remove('hidden');
         
-        // Render sidebar and header
-        document.getElementById('sidebar').innerHTML = renderSidebar();
-        document.getElementById('pageHeader').innerHTML = renderPageHeader('Dashboard', 'Welcome back, here\'s your fleet overview');
+        // Save to localStorage if remember me is checked
+        if (rememberMe) {
+            localStorage.setItem('rememberedUsername', username);
+        } else {
+            localStorage.removeItem('rememberedUsername');
+        }
         
-        await loadDashboard();
-        showNotification('Welcome to Haulage Management System!', 'success');
+        // Animate transition
+        const loginContainer = document.getElementById('loginContainer');
+        loginContainer.style.animation = 'fadeOut 0.3s ease-out';
+        
+        setTimeout(() => {
+            loginContainer.classList.add('hidden');
+            document.getElementById('dashboardContainer').classList.remove('hidden');
+            
+            // Render sidebar and header
+            document.getElementById('sidebar').innerHTML = renderSidebar();
+            document.getElementById('pageHeader').innerHTML = renderPageHeader('Dashboard', 'Welcome back, here\'s your fleet overview');
+            
+            loadDashboard();
+            showNotification(`Welcome back, ${username}!`, 'success');
+        }, 300);
+        
     } catch (error) {
-        document.getElementById('loginError').innerText = 'Invalid credentials. Please try again.';
-        showNotification('Login failed: Invalid credentials', 'error');
+        showLoginError('Invalid username or password. Please try again.');
+        loginBtn.classList.remove('loading');
+        
+        // Shake animation for error
+        const form = document.getElementById('loginForm');
+        form.style.animation = 'shake 0.5s ease';
+        setTimeout(() => {
+            form.style.animation = '';
+        }, 500);
     }
+}
+
+function showLoginError(message) {
+    const errorDiv = document.getElementById('loginError');
+    errorDiv.innerHTML = `
+        <i class="ri-error-warning-line" style="margin-right: 8px;"></i>
+        ${message}
+    `;
+    errorDiv.classList.add('show');
 }
 
 function logout() {
     setAuthToken('');
     document.getElementById('dashboardContainer').classList.add('hidden');
     document.getElementById('loginContainer').classList.remove('hidden');
+    
+    // Reset login form
+    document.getElementById('loginForm').reset();
+    document.getElementById('username').value = 'admin';
+    document.getElementById('password').value = 'admin';
+    
+    // Animate login container back
+    const loginContainer = document.getElementById('loginContainer');
+    loginContainer.style.animation = 'fadeInUp 0.6s ease-out';
+    
     showNotification('Logged out successfully', 'info');
 }
 
@@ -69,7 +129,6 @@ function showSection(section) {
 window.closeModal = function() {
     const modals = document.querySelectorAll('[id$="Modal"]');
     modals.forEach(modal => {
-        // Add fade out animation
         modal.style.opacity = '0';
         setTimeout(() => {
             modal.remove();
@@ -107,6 +166,22 @@ function toggleSidebar() {
     }
 }
 
+// Add fadeOut animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+    }
+`;
+document.head.appendChild(style);
+
 // Add resize listener for responsive behavior
 window.addEventListener('resize', function() {
     if (window.innerWidth > 768) {
@@ -115,5 +190,13 @@ window.addEventListener('resize', function() {
             sidebar.classList.remove('open');
             sidebarOpen = false;
         }
+    }
+});
+
+// Preload dashboard for faster transition
+window.addEventListener('load', function() {
+    // Preload common assets
+    if (document.getElementById('username').value === 'admin') {
+        // Pre-fetch token silently?
     }
 });

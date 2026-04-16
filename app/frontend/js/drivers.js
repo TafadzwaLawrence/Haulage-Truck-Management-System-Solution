@@ -3,38 +3,7 @@ async function loadDrivers() {
     
     try {
         const drivers = await DriverAPI.getAll();
-        const tableHtml = `
-            <div class="card p-6">
-                <h3 class="text-gray-900 font-semibold mb-4 text-base">Driver Roster</h3>
-                <div class="overflow-x-auto">
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>ID</th><th>Name</th><th>License Number</th><th>Phone Number</th><th>Status</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody>
-                            ${drivers.map(driver => `
-                                <tr>
-                                    <td>${driver.id}</td>
-                                    <td class="font-medium">${driver.name}</td>
-                                    <td class="font-mono">${driver.license_number}</td>
-                                    <td>${driver.phone_number}</td>
-                                    <td>${driver.is_active ? '<span class="badge badge-success">Available</span>' : '<span class="badge badge-warning">On Job</span>'}</td>
-                                    <td>
-                                        <button onclick="editDriver(${driver.id})" class="text-blue-600 hover:text-blue-700 mr-2" title="Edit Driver">
-                                            <i class="ri-edit-line text-lg"></i>
-                                        </button>
-                                        <button onclick="deleteDriver(${driver.id})" class="text-red-600 hover:text-red-700" title="Delete Driver">
-                                            <i class="ri-delete-bin-line text-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-        document.getElementById('driversTable').innerHTML = tableHtml;
+        document.getElementById('driversTable').innerHTML = renderDriversTable(drivers);
     } catch (error) {
         document.getElementById('driversTable').innerHTML = '<div class="card p-6"><p class="text-red-600 text-center">Error loading drivers</p></div>';
     }
@@ -44,48 +13,70 @@ async function editDriver(id) {
     try {
         const driver = await DriverAPI.getById(id);
         
-        // Create edit modal
         const modalHtml = `
-            <div id="editDriverModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onclick="if(event.target === this) closeModal()">
-                <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold text-gray-900">Edit Driver</h3>
-                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
-                            <i class="ri-close-line text-2xl"></i>
-                        </button>
+            <div id="editDriverModal" class="modal-overlay" onclick="if(event.target === this) closeModal()">
+                <div class="modal-content">
+                    <div class="card-header" style="border-bottom: 1px solid #f1f5f9;">
+                        <h3>
+                            <i class="ri-edit-line"></i>
+                            Edit Driver
+                        </h3>
                     </div>
-                    <form id="editDriverForm">
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
-                            <input type="text" id="editDriverName" value="${driver.name}" 
-                                   class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">License Number</label>
-                            <input type="text" id="editLicenseNumber" value="${driver.license_number}" 
-                                   class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
-                            <input type="text" id="editPhoneNumber" value="${driver.phone_number}" 
-                                   class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2">Status</label>
-                            <select id="editDriverStatus" class="w-full px-4 py-2 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                                <option value="1" ${driver.is_active === 1 ? 'selected' : ''}>Available</option>
-                                <option value="0" ${driver.is_active === 0 ? 'selected' : ''}>On Job</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-3">
-                            <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50">
-                                Cancel
-                            </button>
-                            <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
-                                Update Driver
-                            </button>
-                        </div>
-                    </form>
+                    <div style="padding: 24px;">
+                        <form id="editDriverForm">
+                            <div class="form-group">
+                                <label class="required">Full Name</label>
+                                <div class="input-icon">
+                                    <i class="ri-user-line"></i>
+                                    <input type="text" id="editDriverName" value="${driver.name}" placeholder="e.g., John Doe">
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Driver's full legal name</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">License Number</label>
+                                <div class="input-icon">
+                                    <i class="ri-id-card-line"></i>
+                                    <input type="text" id="editLicenseNumber" value="${driver.license_number}" placeholder="e.g., LIC-12345">
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Valid commercial driver's license</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Phone Number</label>
+                                <div class="input-icon">
+                                    <i class="ri-phone-line"></i>
+                                    <input type="tel" id="editPhoneNumber" value="${driver.phone_number}" placeholder="e.g., +1 234 567 8900">
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Emergency contact number</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Status</label>
+                                <div class="input-icon">
+                                    <i class="ri-eye-line"></i>
+                                    <select id="editDriverStatus">
+                                        <option value="1" ${driver.is_active === 1 ? 'selected' : ''}>Available</option>
+                                        <option value="0" ${driver.is_active === 0 ? 'selected' : ''}>On Job</option>
+                                    </select>
+                                </div>
+                                <div class="helper-text">
+                                    <i class="ri-information-line"></i>
+                                    <span>Current driver availability</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-3" style="display: flex; gap: 12px; margin-top: 24px;">
+                                <button type="button" onclick="closeModal()" class="btn-secondary" style="flex: 1;">Cancel</button>
+                                <button type="submit" class="btn-primary" style="flex: 1;">Update Driver</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         `;

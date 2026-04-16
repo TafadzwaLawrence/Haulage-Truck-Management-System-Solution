@@ -1,25 +1,100 @@
-# Haulage Truck Management System
+cat > README.md << 'EOF'
+# 🚛 Haulage Truck Management System
 
-## Requirements
-- Docker & Docker Compose
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)](https://www.postgresql.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-## Setup
-1. Clone repo
-2. Copy `.env.example` to `.env` and adjust if needed
-3. Run `docker compose up --build`
-4. API available at `http://localhost:8000/docs`
+A production-ready **full-stack fleet management system** for tracking trucks, drivers, and delivery jobs with intelligent business rule enforcement.
 
-## API Endpoints
-- **Auth**: POST `/auth/token` (get JWT)
-- **Trucks**: CRUD at `/trucks/`
-- **Drivers**: CRUD at `/drivers/`
-- **Jobs**: CRUD at `/jobs/` (business rules enforced)
+## 📋 Table of Contents
 
-## Business Rules
-- Truck cannot be assigned if `in_transit` or `under_maintenance`
-- Driver cannot have multiple active jobs
-- Job completion/cancellation frees truck/driver
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [API Documentation](#api-documentation)
+- [Business Rules](#business-rules)
+- [Screenshots](#screenshots)
+- [Project Structure](#project-structure)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Testing
-```bash
-docker compose run api pytest
+## 🎯 Overview
+
+The **Haulage Truck Management System** is an enterprise-grade solution for logistics companies to manage their fleet operations efficiently. It provides complete CRUD operations for trucks, drivers, and delivery jobs while enforcing critical business rules automatically.
+
+### Key Capabilities
+
+- **Fleet Management**: Track truck status, capacity, and availability
+- **Driver Management**: Maintain driver roster with license and contact information
+- **Job Management**: Create, assign, and track delivery jobs from pickup to completion
+- **Smart Assignment**: Automatically prevents assignment of unavailable trucks or busy drivers
+- **Real-time Dashboard**: Visual analytics with fleet and job status charts
+
+## ✨ Features
+
+### Core Features
+- ✅ **Truck Management** - Register, update, view, and delete trucks with status tracking
+- ✅ **Driver Management** - Create, update, view, and delete drivers with availability status
+- ✅ **Job Management** - Create delivery jobs, assign trucks/drivers, track status, complete jobs
+- ✅ **Business Rules** - Automatic enforcement of truck/driver availability rules
+- ✅ **REST API** - Complete CRUD operations with proper HTTP methods and status codes
+
+### Bonus Features
+- 🔐 **JWT Authentication** - Secure API access with token-based authentication
+- 📊 **Interactive Dashboard** - Real-time statistics and charts
+- 📱 **Responsive UI** - Modern, whitespace design that works on all devices
+- 📄 **Pagination** - Efficient data loading for large datasets
+- 📝 **Logging** - Comprehensive request/error logging to file and console
+- 🧪 **Unit Tests** - Extensive test coverage for all business logic
+- 🐳 **Docker Support** - One-command deployment with docker-compose
+
+## 🛠 Tech Stack
+
+| Category | Technology | Version |
+|----------|-----------|---------|
+| **Backend** | FastAPI | 0.104+ |
+| **Database** | PostgreSQL | 15 |
+| **ORM** | SQLAlchemy | 2.0+ |
+| **Frontend** | HTML5/CSS3/JavaScript | - |
+| **CSS Framework** | TailwindCSS | 3.4+ |
+| **Charts** | Chart.js | 4.4+ |
+| **Icons** | Remix Icon | 4.0+ |
+| **Authentication** | JWT (python-jose) | 3.3+ |
+| **Container** | Docker & Docker Compose | latest |
+| **Testing** | pytest | 7.4+ |
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
+- [Docker Compose](https://docs.docker.com/compose/install/) (version 2.0+)
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/haulage-management.git
+   cd haulage-management
+
+
+2. **Run with Docker Compose**
+   ```bash
+   docker-compose up 
+   ```
+
+3. **Access the application**
+   - Frontend UI: http://localhost:8000
+   - API Documentation (Swagger): http://localhost:8000/docs
+   - API Documentation (ReDoc): http://localhost:8000/redoc
+
+4. **Default Admin User**
+   - Username: `admin`
+   - Password: `admin`
