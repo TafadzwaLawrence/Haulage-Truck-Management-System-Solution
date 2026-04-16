@@ -109,7 +109,16 @@ def update_job(db: Session, job_id: int, job_update: schemas.JobUpdate):
     for key, value in job_update.model_dump(exclude_unset=True).items():
         setattr(db_job, key, value)
     
-    # If job is completed or cancelled, free up truck and driver
+    # If job becomes IN_PROGRESS, occupy truck and driver
+    if job_update.status == models.JobStatus.IN_PROGRESS and old_status != models.JobStatus.IN_PROGRESS:
+        truck = db.query(models.Truck).filter(models.Truck.id == db_job.truck_id).first()
+        if truck:
+            truck.status = models.TruckStatus.IN_TRANSIT
+        driver = db.query(models.Driver).filter(models.Driver.id == db_job.driver_id).first()
+        if driver:
+            driver.is_active = 0
+    
+    # If job is COMPLETED or CANCELLED, free truck and driver
     if job_update.status in [models.JobStatus.COMPLETED, models.JobStatus.CANCELLED] and old_status not in [models.JobStatus.COMPLETED, models.JobStatus.CANCELLED]:
         truck = db.query(models.Truck).filter(models.Truck.id == db_job.truck_id).first()
         if truck:

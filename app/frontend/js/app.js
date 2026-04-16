@@ -24,6 +24,10 @@ async function login() {
     try {
         const data = await AuthAPI.login(username, password);
         setAuthToken(data.access_token);
+            // Start dashboard auto-refresh
+            if (typeof window.startDashboardRefresh === "function") {
+                window.startDashboardRefresh();
+            }
         
         // Save to localStorage if remember me is checked
         if (rememberMe) {
