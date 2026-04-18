@@ -144,16 +144,16 @@ The application includes **18 comprehensive tests** covering all core functional
 
 ```bash
 # Run all tests
-sudo docker compose exec api python -m pytest app/tests/ -v
+docker compose exec api python -m pytest app/tests/ -v
 
 # Run specific test file
-sudo docker compose exec api python -m pytest app/tests/test_trucks.py -v
-sudo docker compose exec api python -m pytest app/tests/test_drivers.py -v
-sudo docker compose exec api python -m pytest app/tests/test_jobs.py -v
+docker compose exec api python -m pytest app/tests/test_trucks.py -v
+docker compose exec api python -m pytest app/tests/test_drivers.py -v
+docker compose exec api python -m pytest app/tests/test_jobs.py -v
 
 # Run with detailed output
-sudo docker compose exec api python -m pytest app/tests/ -v --tb=short
+docker compose exec api python -m pytest app/tests/ -v --tb=short
 
 # Run with test coverage report
-sudo docker compose exec api pip install pytest-cov
-sudo docker compose exec api python -m pytest app/tests/ -v --cov=app --cov-report=term
+docker compose exec api pip install pytest-cov
+docker compose exec api python -m pytest app/tests/ -v --cov=app --cov-report=term
